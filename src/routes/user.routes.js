@@ -1,12 +1,14 @@
 import express from "express";
 import { register, login } from "../controllers/user.controller.js";
 import { userMiddleware } from "../middlewares/user.middleware.js";
+import { validateSchema } from "../middlewares/validator.middleware.js";
+import { userSchema } from "../schemas/user.schema.js";
 
 const userRouter = express.Router();
 
-router.post("/register", register);
-router.post("/login", login);
-router.get("/profile", userMiddleware, (req, res) => {
+userRouter.post("/register", validateSchema(userSchema), register);
+userRouter.post("/login", login);
+userRouter.get("/profile", userMiddleware, (req, res) => {
   res.json({ message: "Perfil protegido", user: req.user });
 });
 

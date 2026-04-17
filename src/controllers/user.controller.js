@@ -1,13 +1,12 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { UserModel } from "../models/UserModel.js";
-import { userSchema } from "../schemas/userSchema.js";
+import { UserModel } from "../models/user.model.js";
 
 export const register = async (req, res) => {
   try {
-    const parsed = userSchema.parse(req.body);
-    const hashedPassword = await bcrypt.hash(parsed.password, 10);
-    const user = await UserModel.create({ ...parsed, password: hashedPassword });
+    const { username, email, password } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = await UserModel.create({ username, email, password: hashedPassword });
     res.json({ message: "Usuario registrado correctamente", user });
   } catch (error) {
     res.status(400).json({ error: error.message });
